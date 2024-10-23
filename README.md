@@ -24,11 +24,11 @@ The **Budgeting App** allows users to track their income, essential expenses, an
 
 ## **Features**
 
-- User authentication (login, registration)
-- Input and manage income and essential expenses
-- Set savings goals with deadlines
-- Add and test non-essential expenses to see their effect on savings goals in real-time
-- Responsive UI for smooth user experience
+- **Secure User Authentication:** Implements secure user authentication using Django's JWT (JSON Web Token) Authentication. This ensures that users can securely log in and access the application with stateless, token-based authentication, enhancing security and scalability.
+- **User Registration and Login:** Supports user sign-up and login functionality with encrypted passwords, ensuring data privacy and security.
+- **Manage Budgets:** Allows users to input income, essential expenses, and set savings goals to manage their budget effectively.
+- **Real-time Updates:** Provides a dynamic dashboard where users can input non-essential expenses and see real-time updates on how those expenses impact their savings goals.
+
 
 ---
 
