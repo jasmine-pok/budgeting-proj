@@ -28,6 +28,7 @@ The **Budgeting App** allows users to track their income, essential expenses, an
 - **User Registration and Login:** Supports user sign-up and login functionality with encrypted passwords, ensuring data privacy and security.
 - **Manage Budgets:** Allows users to input income, essential expenses, and set savings goals to manage their budget effectively.
 - **Real-time Updates:** Provides a dynamic dashboard where users can input non-essential expenses and see real-time updates on how those expenses impact their savings goals.
+- **Modern UI/UX:** Front-end features a clean and modern user interface that enhances usability, making navigation simple and intuitive.
 
 
 ---
