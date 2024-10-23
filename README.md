@@ -1,6 +1,6 @@
 # **Budgeting App**
 
-### A web application to help users manage their finances, set savings goals, and visualize the impact of non-essential expenses in real time.
+### A web application to help users manage their finances, set savings goals, and visualize the impact of non-essential expenses on their savings timeline in real time.
 
 ## **Table of Contents**
 
