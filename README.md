@@ -13,7 +13,7 @@
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
-
+- [Authors](#authors)
 ---
 
 ## **Introduction**
@@ -200,11 +200,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-## **Contact**
+## **Authors**
 
 For any questions or feedback, feel free to contact us at:
-- FrontEnd [sayra6123@gmail.com]
-- BackEnd [socheatapok0801@gmail.com]
+- **Sayra Rodriguez** - *Front-end development* - [sayra6123@gmail.com](mailto:sayra6123@gmail.com)
+- **Socheata (Jasmine) Pok** - *Back-end development* - [socheatapok0801@gmail.com](mailto:socheatapok0801@gmail.com)
+
 
 
 
