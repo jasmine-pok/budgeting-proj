@@ -166,10 +166,11 @@ Once both the frontend and backend are running, open your browser and navigate t
 ## **Project Structure**
 
 ```plaintext
-budgeting-app/
-├── backend/                     # Django Backend
-│   ├── budgeting/               # Project settings
-│   ├── api/                     # API logic (models, serializers, views)
+budgeting-proj/
+├── budgeting_backend/           # Django Backend
+│   ├── budget/                  # Core functionality app for managing income, expenses, and savings goals
+│   ├── budgeting_backend/       # Project settings and URL configurations
+│   ├── user_auth/               # Authentication app handling user registration, login, and logout
 │   └── manage.py                # Django project entry point
 ├── frontend/                    # React Frontend
 │   ├── src/                     # Frontend source files
