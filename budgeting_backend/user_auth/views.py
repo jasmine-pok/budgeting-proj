@@ -4,7 +4,7 @@ from rest_framework import status                                   # Status cod
 from rest_framework.response import Response                        # To send JSON responses
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework.authtoken.models import Token                   # To manage tokens if needed
-from rest_framework.decorators import api_view                      # To create API views with function-based views
+from rest_framework.decorators import api_view, permission_classes                      # To create API views with function-based views
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User                         # Django's built-in User model for authentication
 # from django.contrib.auth.hashers import make_password               # To hash passwords securely
@@ -51,6 +51,7 @@ def register_user(request):
 # User log in
 @csrf_exempt
 @api_view(['POST']) # POST request handler for user login
+@permission_classes([AllowAny])
 def user_login(request):
     username = request.data.get('username')
     password = request.data.get('password')
@@ -64,6 +65,19 @@ def user_login(request):
 
     if user is not None:
         token, _ = Token.objects.get_or_create(user=user)       # either retrieve an existing token for user or create a new one if doesn't exist
+        print(f"User {user.username} logged in with token: {token.key}")
         return Response({'token': token.key}, status=status.HTTP_200_OK)
     else:
         return Response({'error' : 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+    
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])      # Only logged-in users can log out
+def user_logout(request):
+    try:
+        token = Token.objects.get(user=request.user)        # Attempt to get token for the authenticated user
+        token.delete()
+        return Response({"detail" : "Successfully logged out."}, status=status.HTTP_200_OK)
+    except Token.DoesNotExist:
+        return Response({"error": "Token not found."}, status=status.HTTP_400_BAD_REQUEST)
+
