@@ -2,17 +2,25 @@
 from django.shortcuts import render                                 
 from rest_framework import status                                   # Status codes (200 OK, 400 Bad Request)
 from rest_framework.response import Response                        # To send JSON responses
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework.authtoken.models import Token                   # To manage tokens if needed
 from rest_framework.decorators import api_view                      # To create API views with function-based views
+from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User                         # Django's built-in User model for authentication
-from django.contrib.auth.hashers import make_password               # To hash passwords securely
-from rest_framework_simplejwt.views import TokenObtainPairView      # JWT view to handle login
+# from django.contrib.auth.hashers import make_password               # To hash passwords securely
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.translation import gettext as _
+from django.contrib.auth import authenticate
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import permission_classes
 
 # Register User API View
+@csrf_exempt
 @api_view(['POST']) # POST request handler for user registration
+@permission_classes([AllowAny])
 def register_user(request):
     # Extract data from the request
     username = request.data.get('username')
@@ -39,3 +47,23 @@ def register_user(request):
     except Exception as e:
         # catch any other errors
         return Response({'error': 'User registration failed. ' + str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+# User log in
+@csrf_exempt
+@api_view(['POST']) # POST request handler for user login
+def user_login(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    # Check if fields are empty
+    if not username or not password:
+        return Response({'error' : 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Authenticate user
+    user = authenticate(request, username=username, password=password)
+
+    if user is not None:
+        token, _ = Token.objects.get_or_create(user=user)       # either retrieve an existing token for user or create a new one if doesn't exist
+        return Response({'token': token.key}, status=status.HTTP_200_OK)
+    else:
+        return Response({'error' : 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
