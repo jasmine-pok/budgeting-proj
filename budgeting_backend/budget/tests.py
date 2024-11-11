@@ -47,3 +47,14 @@ class BudgetingAppTests(TestCase):
         total_expenses = sum(expense.amount for expense in self.user.essentialexpenses_set.all()) + \
                          sum(expense.amount for expense in self.user.nonessentialexpenses_set.all())
         self.assertEqual(total_expenses, 1700)
+
+    def test_negative_income(self):
+        with self.assertRaises(Exception):
+            Income.objects.create(user=self.user, name='Negative income', amount=-100)
+
+    def test_profile_remaining_expense(self):
+    # Test calculations in Profile
+        income = Income.objects.create(user=self.user, name='Full-time job', amount=5000)
+        expense = EssentialExpenses.objects.create(user=self.user, name='Rent', amount=1500)
+        profile = self.user.profile
+        self.assertEqual(profile.remaining_expense, 3500)
