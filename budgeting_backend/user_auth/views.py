@@ -1,13 +1,12 @@
 # Import necessary modules and functions
 from django.shortcuts import render                                 
-from rest_framework import status                                   # Status codes (200 OK, 400 Bad Request)
-from rest_framework.response import Response                        # To send JSON responses
+from rest_framework import status                                     # Status codes (200 OK, 400 Bad Request)
+from rest_framework.response import Response                          # To send JSON responses
 # from rest_framework.authtoken.views import obtain_auth_token
 # from rest_framework.authtoken.models import Token                   # To manage tokens if needed
-from rest_framework.decorators import api_view, permission_classes                      # To create API views with function-based views
+from rest_framework.decorators import api_view, permission_classes    # To create API views with function-based views
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.contrib.auth.models import User                         # Django's built-in User model for authentication
-# from django.contrib.auth.hashers import make_password               # To hash passwords securely
+from django.contrib.auth.models import User                           # Django's built-in User model for authentication
 from django.contrib.auth.password_validation import validate_password
 from rest_framework.validators import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError

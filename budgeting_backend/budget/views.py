@@ -3,6 +3,7 @@ from rest_framework import generics
 from .models import Income, EssentialExpenses, NonEssentialExpenses, SavingsGoal
 from .serializers import IncomeSerializer, EssentialExpensesSerializer, NonEssentialExpensesSerializer, SavingsGoalSerializer
 from rest_framework.permissions import IsAuthenticated
+from rest_framework import serializers
 
 # ListCreateAPIView: lists all incomes for the user and creates new income record
 # GET request to /income/ = list income records
@@ -18,4 +19,90 @@ class IncomeListCreateView(generics.ListCreateAPIView):
     
     # Automatically associate the logged-in user with the income record during creation
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)   # Save the income with the logged-in user
+        try:
+            serializer.save(user=self.request.user)   # Save the income with the logged-in user
+        except Exception as e:
+            raise serializers.ValidationError(f"Error: {str(e)}")
+        
+
+# GET request to /income/<id>/ will retrieve a single income by its ID
+# PUT/PATCH request to /income/<id>/ will update the specific income
+# DELETE request to /income/<id>/ will delete the income
+class IncomeDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Income.objects.all()
+    serializer_class = IncomeSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+# Essential Expenses follows the same logic
+
+class EssentialExpensesListCreateView(generics.ListCreateAPIView):
+    queryset = EssentialExpenses.objects.all()
+    serializer_class = EssentialExpensesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        try:
+            serializer.save(user=self.request.user)   # Save the income with the logged-in user
+        except Exception as e:
+            raise serializers.ValidationError(f"Error: {str(e)}")
+    
+class EssentialExpensesDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = EssentialExpenses.objects.all()
+    serializer_class = EssentialExpensesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+
+# Non Essential Expenses
+class NonEssentialExpensesListCreateView(generics.ListCreateAPIView):
+    queryset = NonEssentialExpenses.objects.all()
+    serializer_class = NonEssentialExpensesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        try:
+            serializer.save(user=self.request.user)   # Save the income with the logged-in user
+        except Exception as e:
+            raise serializers.ValidationError(f"Error: {str(e)}")
+    
+class NonEssentialExpensesDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = NonEssentialExpenses.objects.all()
+    serializer_class = NonEssentialExpensesSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+# Savings Goals
+class SavingsGoalListCreateView(generics.ListCreateAPIView):
+    queryset = SavingsGoal.objects.all()
+    serializer_class = SavingsGoalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+    
+    def perform_create(self, serializer):
+        try:
+            serializer.save(user=self.request.user)   # Save the income with the logged-in user
+        except Exception as e:
+            raise serializers.ValidationError(f"Error: {str(e)}")
+    
+class SavingsGoalDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = SavingsGoal.objects.all()
+    serializer_class = SavingsGoalSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)

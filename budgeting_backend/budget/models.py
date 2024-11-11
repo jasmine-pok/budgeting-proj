@@ -29,9 +29,11 @@ class NonEssentialExpenses(models.Model):
 class SavingsGoal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
+    # Optional field
+    name = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
-        return f"{self.name} - {self.amount}"
+        return f"{self.name} - {self.amount}" if self.name else f"Savings Goal - {self.amount}"
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -58,12 +60,12 @@ class Profile(models.Model):
         if savings_goal:
             monthly_savings = self.remaining_expense - self.total_non_essential_expense
             if monthly_savings > 0:
-                months = savings_goal.goal_amount / monthly_savings
+                months = savings_goal.amount / monthly_savings
                 if months >= 12:
                     years = months/12
-                    return years
+                    return f"{years:.1f} years"
                 else:
-                    return months
+                    return f"{months:.1f} months"
             return None 
 
     

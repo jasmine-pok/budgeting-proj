@@ -5,6 +5,7 @@ class IncomeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Income  # Tie this serializer to the Income model
         fields = ['id', 'user', 'amount', 'name']
+        read_only_fields = ['user']
     
     def validate_amount(self, value):
         if value <= 0:
@@ -15,6 +16,7 @@ class EssentialExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model = EssentialExpenses   # Tie this serializer to the Essential Expenses Model
         fields = ['id', 'user', 'amount', 'name']
+        read_only_fields = ['user']
 
     def validate_amount(self, value):
         if value <= 0:
@@ -25,6 +27,7 @@ class NonEssentialExpensesSerializer(serializers.ModelSerializer):
     class Meta:
         model = NonEssentialExpenses    # Tie this serializer to the Non Essential Expenses model
         fields = ['id', 'user', 'amount', 'name']
+        read_only_fields = ['user']
 
     def validate_amount(self, value):
         if value <= 0:
@@ -35,6 +38,7 @@ class SavingsGoalSerializer(serializers.ModelSerializer):
     class Meta:
         model = SavingsGoal # Tie this serializer to the SavingsGoal model
         fields = ['id', 'user', 'amount']
+        read_only_fields = ['user']
 
     def validate_amount(self, value):
         if value <= 0:
