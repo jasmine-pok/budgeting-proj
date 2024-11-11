@@ -52,13 +52,13 @@ class Profile(models.Model):
     
     @property
     def remaining_expense(self):
-        return self.total_income - self.total_essential_expenses
+        return self.total_income - (self.total_essential_expenses + self.total_non_essential_expense)
     
     @property
     def time_to_reach_goal(self):
         savings_goal = self.user.savingsgoal_set.first()
         if savings_goal:
-            monthly_savings = self.remaining_expense - self.total_non_essential_expense
+            monthly_savings = self.remaining_expense 
             if monthly_savings > 0:
                 months = savings_goal.amount / monthly_savings
                 if months >= 12:
@@ -66,7 +66,8 @@ class Profile(models.Model):
                     return f"{years:.1f} years"
                 else:
                     return f"{months:.1f} months"
-            return None 
+            return "No savings possible with current income and expenses"
+        return "No savings goal set"
 
     
 
