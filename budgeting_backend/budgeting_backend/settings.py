@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.authtoken',
+    'rest_framework.simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'user_auth',
     'budget',
 ]
@@ -48,7 +49,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,20 +130,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',   # Restrict access to authenticated users by default
+        'rest_framework.permissions.IsAuthenticated',   # Restrict access to authenticated users by default
     )
 }
 
 # session cookie age
-SESSION_COOKIE_AGE = 86400 # number of seconds in 1 day
-SESSION_SAVE_EVERY_REQUEST = True  # Allow users to extend session on every request
+# SESSION_COOKIE_AGE = 86400 # number of seconds in 1 day
+# SESSION_SAVE_EVERY_REQUEST = True  # Allow users to extend session on every request
 
 # Configure token lifetime 
-#SIMPLE_JWT = {
-#    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
-#    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-#}
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': True,  # Issue a new refresh token with each refresh
+    'BLACKLIST_AFTER_ROTATION': True,
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY' : SECRET_KEY, 
+    'AUTH_HEADER_TYPES': ('Bearer',),
+
+}
 
