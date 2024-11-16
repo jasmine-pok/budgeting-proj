@@ -30,10 +30,10 @@ def register_user(request):
         return Response({'error' : 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
     
     if User.objects.filter(username=username).exists():
-        return Response({"detail": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Username already exists."}, status=status.HTTP_400_BAD_REQUEST)
     
     if User.objects.filter(email=email).exists():
-        return Response({"detail": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Email already exists."}, status=status.HTTP_400_BAD_REQUEST)
     
     try:
         #validate the password using Django's built-in validators
@@ -79,7 +79,7 @@ def user_login(request):
             return Response({'error' : 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
     # GET requests:
     else:
-        return Response({'message': 'Please send a POST request to log in.'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Please send a POST request to log in.'}, status=status.HTTP_200_OK)
     
     
 
