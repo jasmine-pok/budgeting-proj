@@ -2,8 +2,6 @@
 from django.shortcuts import render                                 
 from rest_framework import status                                     # Status codes (200 OK, 400 Bad Request)
 from rest_framework.response import Response                          # To send JSON responses
-# from rest_framework.authtoken.views import obtain_auth_token
-# from rest_framework.authtoken.models import Token                   # To manage tokens if needed
 from rest_framework.decorators import api_view, permission_classes    # To create API views with function-based views
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.contrib.auth.models import User                           # Django's built-in User model for authentication
@@ -12,8 +10,15 @@ from rest_framework.validators import ValidationError
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.utils.translation import gettext as _
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import permission_classes
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken
+
+# Get the user model dynamically
+User = get_user_model()
 
 # Register User API View
 @csrf_exempt
@@ -42,8 +47,20 @@ def register_user(request):
         # create the user with hased password
         user = User.objects.create_user(username=username, email=email, password=password)
 
-        # send sucess response
-        return Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+        # Generate JWT tokens
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+
+        # Set JWT tokens in cookies
+        response = Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
+        response.set_cookie(
+            'access_token', value=access_token, httponly=True, secure=True, samesite='Strict'
+        )
+        response.set_cookie(
+            'refresh_token', value=str(refresh), httponly=True, secure=True, samesite='Strict'
+        )
+
+        return response
     
     except DjangoValidationError as e:
         return Response({'error': list(e.messages)}, status=status.HTTP_400_BAD_REQUEST)
@@ -54,7 +71,7 @@ def register_user(request):
     
 # User log in
 @csrf_exempt
-@api_view(['POST', 'GET']) # POST request handler for user login
+@api_view(['POST']) # POST request handler for user login
 @permission_classes([AllowAny])
 def user_login(request):
     if request.method == 'POST':
@@ -63,40 +80,68 @@ def user_login(request):
 
         # Check if fields are empty
         if not username or not password:
-            return Response({'error' : 'All fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error' : 'All fields are required'}, 
+                            status=status.HTTP_400_BAD_REQUEST
+                            )
 
         # Authenticate user
         user = authenticate(request, username=username, password=password)
  
         if user is not None:
-            # token, _ = Token.objects.get_or_create(user=user)       # either retrieve an existing token for user or create a new one if doesn't exist
-            # print(f"User {user.username} logged in with token: {token.key}")
-            # return Response({'token': token.key}, status=status.HTTP_200_OK)
-            # Log user in with session-based authentication
-            login(request, user)
-            return Response({'message': 'User logged in successfully'}, status=status.HTTP_200_OK)
+            # Generate JWT tokens
+            refresh = RefreshToken.for_user(user)
+            access_token = str(refresh.access_token)
+
+            # Set JWT tokens in cookies (with HttpOnly for security)
+            response = Response({'message': 'User logged in successfully'}, 
+                                status=status.HTTP_200_OK)
+            
+            response.set_cookie(
+                'access_token', value=access_token, httponly=True, secure=True, samesite='Strict'
+            )
+            response.set_cookie(
+                'refresh_token', value=str(refresh), httponly=True, secure=True, samesite='Strict'
+            )
+
+            return response
+
         else:
-            return Response({'error' : 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error' : 'Invalid credentials'}, 
+                            status=status.HTTP_401_UNAUTHORIZED
+                            )
     # GET requests:
     else:
-        return Response({'error': 'Please send a POST request to log in.'}, status=status.HTTP_200_OK)
+        return Response({'error': 'Method not allowed.'}, 
+                        status=status.HTTP_405_METHOD_NOT_ALLOWED
+                        )
     
     
 
 # User Logout
-@csrf_exempt
+# @csrf_exempt
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])      # Only logged-in users can log out
 def user_logout(request):
-    # try:
-        # token = Token.objects.get(user=request.user)        # Attempt to get token for the authenticated user
-        # token.delete()
-        # return Response({"detail" : "Successfully logged out."}, status=status.HTTP_200_OK)
-    # except Token.DoesNotExist:
-        # return Response({"error": "Token not found."}, status=status.HTTP_400_BAD_REQUEST)
-    # session-based authentication logout:
-    logout(request)
-    return Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+    try:
+        # Extract the refresh token from the cookies
+        refresh_token = request.COOKIES.get('refresh_token')
+
+        if not refresh_token:
+            return Response({'error': 'No refresh token found in cookeis'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Blacklist the refresh token
+        token = RefreshToken(refresh_token)
+        token.blacklist()
+
+        response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        response.delete_cookie('access_token')
+        response.delete_cookie('refresh_token')
+
+        logout(request)
+        return response
+    
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
