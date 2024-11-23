@@ -8,7 +8,7 @@ from .views import (
 
 app_name = 'budget'
 
-URL_PATTERNS = [
+urlpatterns = [
     # Income URLS
     path('income/', IncomeListCreateView.as_view(), name='income-list-create'),
     path('income/<int:pk>/', IncomeDetailView.as_view(), name='income-detail'),

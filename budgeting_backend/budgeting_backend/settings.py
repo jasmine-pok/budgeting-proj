@@ -28,7 +28,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+ 
 # Application definition
 
 INSTALLED_APPS = [
@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'rest_framework.simplejwt',
+    # 'rest_framework.simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'user_auth',
     'budget',
