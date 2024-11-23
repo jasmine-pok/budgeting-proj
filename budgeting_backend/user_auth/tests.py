@@ -58,7 +58,8 @@ class UserAuthTests(APITestCase):
         """
         Create a test user and set the login endpoint.
         """
-        self.user = User.objects.create_user(username='exampleuser', password='password123')
+        self.user = User.objects.create_user(username='exampleuser', 
+                                             password='password123')
         self.login_url = '/auth/login/'
 
     def test_successful_login(self):
@@ -96,7 +97,7 @@ class UserAuthTests(APITestCase):
         """
         Ensure login fails when required fields are missing.
         """
-        data = {'username': 'testuser'}  # Password missing
+        data = {'username': 'exampleuser'}  # Password missing
         response = self.client.post(self.login_url, data)
         
         # Check for 400 BAD REQUEST status
@@ -113,7 +114,8 @@ class UserAuthTests(APITestCase):
         self.user.is_active = False
         self.user.save()
         
-        data = {'username': 'testuser', 'password': 'password123'}
+        data = {'username': 'exampleuser', 
+                'password': 'password123'}
         response = self.client.post(self.login_url, data)
         
         # Check for 401 UNAUTHORIZED status
@@ -132,7 +134,8 @@ class UserAuthTests(APITestCase):
         """
         Ensure the tokens are set in cookies with HttpOnly for security.
         """
-        data = {'username': 'testuser', 'password': 'password123'}
+        data = {'username': 'exampleuser', 
+                'password': 'password123'}
         response = self.client.post(self.login_url, data)
         
         # Check if cookies have HttpOnly flag
@@ -146,15 +149,20 @@ class UserLogoutTests(APITestCase):
 
     def setUp(self):
         """Set up a user and log them in to obtain tokens."""
-        self.user = User.objects.create_user(username="testuser", password="StrongPassword123")
-        response = self.client.post('/auth/login/', {"username": "testuser", "password": "StrongPassword123"})
+        self.user = User.objects.create_user(username="exampleuser", 
+                                             password="StrongPassword123")
+        response = self.client.post('/auth/login/', {"username": "exampleuser", 
+                                                     "password": "StrongPassword123"})
         self.access_token = response.cookies.get('access_token').value
         self.refresh_token = response.cookies.get('refresh_token').value
+        
+        # Use the access token for Authorization header
+        self.token = f'Bearer {self.access_token}'
 
     def test_successful_logout(self):
         """Test logging out a user with valid tokens."""
         self.client.cookies['refresh_token'] = self.refresh_token
-        response = self.client.post('/auth/logout/')
+        response = self.client.post('/auth/logout/', HTTP_AUTHORIZATION=self.token)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn("message", response.data)
 
@@ -162,12 +170,12 @@ class UserLogoutTests(APITestCase):
         """Test logging out without providing tokens."""
         response = self.client.post('/auth/logout/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn("error", response.data)
+        self.assertIn("detail", response.data)
 
     def test_logout_with_invalid_token(self):
         """Test logging out with an invalid or expired token."""
         self.client.cookies['refresh_token'] = "invalid_token"
         response = self.client.post('/auth/logout/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn("error", response.data)
+        self.assertIn("detail", response.data)
 

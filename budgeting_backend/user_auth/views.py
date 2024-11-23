@@ -127,13 +127,13 @@ def user_logout(request):
         refresh_token = request.COOKIES.get('refresh_token')
 
         if not refresh_token:
-            return Response({'error': 'No refresh token found in cookeis'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": 'No refresh token found in cookies'}, status=status.HTTP_400_BAD_REQUEST)
         
         # Blacklist the refresh token
         token = RefreshToken(refresh_token)
         token.blacklist()
 
-        response = Response({"detail": "Successfully logged out."}, status=status.HTTP_200_OK)
+        response = Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
         response.delete_cookie('access_token')
         response.delete_cookie('refresh_token')
 
