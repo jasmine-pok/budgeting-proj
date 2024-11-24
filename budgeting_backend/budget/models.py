@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 # Income class
 class Income(models.Model):
@@ -9,6 +10,16 @@ class Income(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.amount}"
+        
+    # Validation to prevent negative amounts
+    def clean(self):
+        if self.amount < 0:
+            raise ValidationError("Income amount cannot be negative.")
+
+    # Ensure validation runs before saving
+    def save(self, *args, **kwargs):
+        self.clean()  # Call the clean method to validate
+        super().save(*args, **kwargs)
 
 class EssentialExpenses(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -18,6 +29,16 @@ class EssentialExpenses(models.Model):
     def __str__(self):
         return f"{self.name} - {self.amount}"
     
+    # Validation to prevent negative amounts
+    def clean(self):
+        if self.amount < 0:
+            raise ValidationError("Income amount cannot be negative.")
+
+    # Ensure validation runs before saving
+    def save(self, *args, **kwargs):
+        self.clean()  # Call the clean method to validate
+        super().save(*args, **kwargs)
+    
 class NonEssentialExpenses(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=10, decimal_places=2)
@@ -25,6 +46,16 @@ class NonEssentialExpenses(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.amount}"
+    
+    # Validation to prevent negative amounts
+    def clean(self):
+        if self.amount < 0:
+            raise ValidationError("Income amount cannot be negative.")
+
+    # Ensure validation runs before saving
+    def save(self, *args, **kwargs):
+        self.clean()  # Call the clean method to validate
+        super().save(*args, **kwargs)
     
 class SavingsGoal(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -34,6 +65,16 @@ class SavingsGoal(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.amount}" if self.name else f"Savings Goal - {self.amount}"
+    
+    # Validation to prevent negative amounts
+    def clean(self):
+        if self.amount < 0:
+            raise ValidationError("Income amount cannot be negative.")
+
+    # Ensure validation runs before saving
+    def save(self, *args, **kwargs):
+        self.clean()  # Call the clean method to validate
+        super().save(*args, **kwargs)
     
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
