@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    # 'rest_framework.simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'user_auth',
     'budget',
@@ -81,8 +80,12 @@ WSGI_APPLICATION = 'budgeting_backend.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'budgeting_app',
+        'USER': 'budgeting_user',
+        'PASSWORD': 'admin',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
