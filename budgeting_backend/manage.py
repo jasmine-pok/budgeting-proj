@@ -3,6 +3,8 @@
 import os
 import sys
 
+os.add_dll_directory(r"C:\Program Files\PostgreSQL\17\bin")
+
 """
 def main():
     Run administrative tasks.
