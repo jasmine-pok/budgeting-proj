@@ -24,5 +24,4 @@ urlpatterns = [
     # Savings Goal
     path('savings-goal/', SavingsGoalListCreateView.as_view(), name='savings-goal-list-create'),
     path('savings-goal/<int:pk>/', SavingsGoalDetailView.as_view(), name='savings-goal-detail')
-
 ]

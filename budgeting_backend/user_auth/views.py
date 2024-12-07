@@ -1,5 +1,5 @@
 # Import necessary modules and functions
-from django.shortcuts import render                                 
+from django.shortcuts import render                            
 from rest_framework import status                                     # Status codes (200 OK, 400 Bad Request)
 from rest_framework.response import Response                          # To send JSON responses
 from rest_framework.decorators import api_view, permission_classes    # To create API views with function-based views
@@ -87,7 +87,7 @@ def user_login(request):
         # Authenticate user
         user = authenticate(request, username=username, password=password)
  
-        if user is not None:
+        if user is not None:           
             # Generate JWT tokens
             refresh = RefreshToken.for_user(user)
             access_token = str(refresh.access_token)

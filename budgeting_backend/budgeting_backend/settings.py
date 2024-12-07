@@ -12,6 +12,15 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 from datetime import timedelta
+import environ
+import os
+
+# Initialize environ
+# env = environ.Env()
+
+# Read .env file
+# environ.Env.read_env()
+# print(env("Loaded .env file"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +30,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-j#!o&nk)wv3u3#-j^(kcx78lw^ocm$ah7p-4e%jc1(40+9p$lx'
+# SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY="+*wskr+a*0(fg4hdx=gbu1)7(q(#1+f4ppvb)(jqpe+qq+1tt#"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = env("DEBUG")
+DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 
  
 # Application definition
@@ -40,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
+    'corsheaders',
     'user_auth',
     'budget',
 ]
@@ -52,7 +64,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173", # React frontend URL
+]
+
+CORS_ALLOWED_ALL_ORIGINS = True
 
 ROOT_URLCONF = 'budgeting_backend.urls'
 
@@ -77,6 +96,18 @@ WSGI_APPLICATION = 'budgeting_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
+"""
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST'),
+        'PORT': env('DB_PORT'),
+    }
+}
+"""
 
 DATABASES = {
     'default': {
@@ -88,7 +119,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
