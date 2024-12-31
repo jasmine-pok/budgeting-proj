@@ -15,30 +15,25 @@ from datetime import timedelta
 import environ
 import os
 
-# Initialize environ
-# env = environ.Env()
-
-# Read .env file
-# environ.Env.read_env()
-# print(env("Loaded .env file"))
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Initialize environ
+env = environ.Env()
+
+# Read .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = env("SECRET_KEY")
-SECRET_KEY="+*wskr+a*0(fg4hdx=gbu1)7(q(#1+f4ppvb)(jqpe+qq+1tt#"
+SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = env("DEBUG")
-DEBUG = True
+DEBUG = env("DEBUG")
 
-#ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
-
+ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
  
 # Application definition
 
@@ -67,9 +62,11 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
+"""
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173", # React frontend URL
 ]
+"""
 
 CORS_ALLOWED_ALL_ORIGINS = True
 
@@ -96,7 +93,8 @@ WSGI_APPLICATION = 'budgeting_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-"""
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -107,18 +105,7 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
-"""
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'budgeting_app',
-        'USER': 'budgeting_user',
-        'PASSWORD': 'admin',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
