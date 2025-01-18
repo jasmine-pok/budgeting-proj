@@ -3,7 +3,8 @@ from .views import (
     IncomeListCreateView, IncomeDetailView,
     EssentialExpensesListCreateView, EssentialExpensesDetailView,
     NonEssentialExpensesListCreateView, NonEssentialExpensesDetailView,
-    SavingsGoalListCreateView, SavingsGoalDetailView
+    SavingsGoalListCreateView, SavingsGoalDetailView,
+    TimeToReachGoalView
 )
 
 app_name = 'budget'
@@ -23,5 +24,8 @@ urlpatterns = [
 
     # Savings Goal
     path('savings-goal/', SavingsGoalListCreateView.as_view(), name='savings-goal-list-create'),
-    path('savings-goal/<int:pk>/', SavingsGoalDetailView.as_view(), name='savings-goal-detail')
+    path('savings-goal/<int:pk>/', SavingsGoalDetailView.as_view(), name='savings-goal-detail'),
+
+    # Time to reach goal
+    path('time-to-reach-goal/', TimeToReachGoalView.as_view(), name='time-to-reach-goal')
 ]

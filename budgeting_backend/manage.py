@@ -3,7 +3,8 @@
 import os
 import sys
 
-os.add_dll_directory(r"C:\Program Files\PostgreSQL\17\bin")
+if sys.platform == "win32":
+    os.add_dll_directory(r"C:\Program Files\PostgreSQL\17\bin")
 
 """
 def main():

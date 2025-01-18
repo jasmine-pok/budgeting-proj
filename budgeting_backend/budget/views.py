@@ -5,6 +5,9 @@ from .serializers import IncomeSerializer, EssentialExpensesSerializer, NonEssen
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import serializers
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.exceptions import NotFound
 
 # Pagination class to laod 10 records per page 
 class StandardResultsSetPagination(PageNumberPagination):
@@ -117,3 +120,14 @@ class SavingsGoalDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user)
+    
+class TimeToReachGoalView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile = getattr(request.user, 'profile', None)
+        if not profile:
+            raise NotFound("Profile not found for the user.")
+        
+        time_to_goal = profile.time_to_reach_goal
+        return Response({"time_to_reach_goal": time_to_goal})

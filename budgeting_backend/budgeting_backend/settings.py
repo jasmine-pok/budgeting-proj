@@ -15,7 +15,7 @@ from datetime import timedelta
 import environ
 import os
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environ
@@ -33,7 +33,8 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG")
 
-ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
+# ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
+ALLOWED_HOSTS = ['*']
  
 # Application definition
 
@@ -70,6 +71,8 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOWED_ALL_ORIGINS = True
 
+CSRF_TRUSTED_ORIGINS = ['https://9570-98-34-148-45.ngrok-free.app']
+
 ROOT_URLCONF = 'budgeting_backend.urls'
 
 TEMPLATES = [
@@ -103,6 +106,9 @@ DATABASES = {
         'PASSWORD': env('DB_PASSWORD'),
         'HOST': env('DB_HOST'),
         'PORT': env('DB_PORT'),
+        'OPTIONS' : {
+            'connect_timeout': 10,
+        }
     }
 }
 
@@ -143,6 +149,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+# Static files configuration for Docker
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -166,7 +175,7 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True,  # Issue a new refresh token with each refresh
     'BLACKLIST_AFTER_ROTATION': True,
     'ALGORITHM': 'HS256',
-    'SIGNING_KEY' : SECRET_KEY, 
+    'SIGNING_KEY' : env('JWT_SIGNING_KEY'), 
     'AUTH_HEADER_TYPES': ('Bearer',),
 
 }

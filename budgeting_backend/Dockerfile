@@ -1,5 +1,8 @@
 # Base image
-FROM python:3.11-slim
+FROM python:3.11-slim-buster
+
+# Install netcat
+RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -7,6 +10,13 @@ ENV PYTHONUNBUFFERED 1
 
 # Set the working directory
 WORKDIR /app
+
+# Create and use virtual environment for Python dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Ensure the application directory has the correct permissions
+RUN chmod -R 755 /app
 
 # Install system dependencies
 RUN apt-get update && apt-get install -y \

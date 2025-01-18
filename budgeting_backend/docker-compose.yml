@@ -5,25 +5,42 @@ services:
     build:
       context: .
     container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c "while ! nc -z db 5432; do sleep 1; done; 
+            python manage.py migrate && 
+            python manage.py runserver 0.0.0.0:8000"
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - .:/app:delegated
     env_file:
       - .env
     depends_on:
-      - db
+      - postgres_db
+    environment:
+      DB_HOST: postgres_db
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+
 
   db:
     image: postgres:15
     container_name: postgres_db
     environment:
-      POSTGRES_USER: your_db_user
-      POSTGRES_PASSWORD: your_db_password
-      POSTGRES_DB: your_db_name
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U budgeting_user"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres_data:
+
+
