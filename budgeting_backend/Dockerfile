@@ -4,6 +4,9 @@ FROM python:3.11-slim-buster
 # Install netcat
 RUN apt-get update && apt-get install -y netcat && rm -rf /var/lib/apt/lists/*
 
+# Install psql
+RUN apt-get update && apt-get install -y postgresql-client
+
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1

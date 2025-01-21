@@ -17,6 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - backend
 
   web:
     build:
@@ -34,11 +36,17 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: db
+      DB_HOST: ${DB_HOST}
       DB_NAME: ${DB_NAME}
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
+    networks:
+      - backend
 
+networks:
+  backend:
+    driver: bridge
+    
 volumes:
   postgres_data:
 

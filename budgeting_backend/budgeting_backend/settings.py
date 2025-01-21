@@ -63,11 +63,6 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
 ]
 
-"""
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173", # React frontend URL
-]
-"""
 
 CORS_ALLOWED_ALL_ORIGINS = True
 
@@ -179,4 +174,5 @@ SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('Bearer',),
 
 }
+
 
