@@ -1,8 +1,8 @@
-# **Budgeting App**
+# **🏦 Budgeting App**
 
 ### A web application to help users manage their finances, set savings goals, and visualize the impact of non-essential expenses in real time.
 
-## **Table of Contents**
+## **📜 Table of Contents**
 
 - [Introduction](#introduction)
 - [Features](#features)
@@ -16,38 +16,45 @@
 
 ---
 
-## **Introduction**
+## **📌 Introduction**
 
 The **Budgeting App** allows users to track their income, essential expenses, and savings goals, while experimenting with non-essential expenses. This lets users visualize how these additional expenses affect their savings goals over time. The app provides an intuitive and user-friendly interface for managing personal finances.
 
 ---
 
-## **Features**
-
-- User authentication (login, registration)
-- Input and manage income and essential expenses
-- Set savings goals with deadlines
-- Add and test non-essential expenses to see their effect on savings goals in real-time
-- Responsive UI for smooth user experience
+**Project Status:**  
+✅ **Backend is fully implemented and deployed on AWS EC2.**  
+🚧 **Frontend is still in development.**  
 
 ---
 
-## **Tech Stack**
+## **🚀 Features**
+
+- **Secure User Authentication** – Implements **JWT authentication** for stateless, token-based security.  
+- **User Registration & Login** – Encrypted password storage for data privacy.  
+- **Manage Budgets** – Users can input income, essential expenses, and set savings goals.  
+- **Real-Time Updates** – Dynamic calculations on how non-essential expenses affect savings goals.  
+- **Modern API-Driven Architecture** – Fully RESTful backend API.  
+
+---
+
+## **🛠 Tech Stack**
 
 ### **Backend (Django)**
 
 - **Django**: Python web framework to handle the backend logic and API requests
 - **Django Rest Framework (DRF)**: To create REST APIs for interacting with the frontend
-- **SQLite**: Default database for development (can be swapped for PostgreSQL or another DB in production)
+- **PostgreSQL**: Database for production
+- **JWT Authentication**: Secure user login
 
-### **Frontend (React)**
+### **Frontend (React) (In Progress)**
 
 - **React.js**: JavaScript library for building the user interface
 - **Axios** or **Fetch API**: For making HTTP requests to the Django API
 
 ---
 
-## **Installation**
+## **📥 Installation**
 
 ### **1. Clone the Repository**
 
@@ -183,7 +190,7 @@ budgeting-proj/
 
 ---
 
-## **Contributing**
+## **🤝 Contributing**
 
 Contributions are welcome! To contribute:
 
@@ -195,13 +202,13 @@ Contributions are welcome! To contribute:
 
 ---
 
-## **License**
+## **📜 License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## **Contact**
+## **👥 Contact**
 
 For any questions or feedback, feel free to contact us at:
 - FrontEnd [sayra6123@gmail.com]
