@@ -1,8 +1,8 @@
-# **Budgeting App**
+# **🏦 Budgeting App**
 
-### A web application to help users manage their finances, set savings goals, and visualize the impact of non-essential expenses on their savings timeline in real time.
+### A web application to help users manage their finances, set savings goals, and visualize the impact of non-essential expenses in real time.
 
-## **Table of Contents**
+## **📜 Table of Contents**
 
 - [Introduction](#introduction)
 - [Features](#features)
@@ -13,42 +13,48 @@
 - [Project Structure](#project-structure)
 - [Contributing](#contributing)
 - [License](#license)
-- [Authors](#authors)
+
 ---
 
-## **Introduction**
+## **📌 Introduction**
 
 The **Budgeting App** allows users to track their income, essential expenses, and savings goals, while experimenting with non-essential expenses. This lets users visualize how these additional expenses affect their savings goals over time. The app provides an intuitive and user-friendly interface for managing personal finances.
 
 ---
 
-## **Features**
-
-- **Secure User Authentication:** Implements secure user authentication using Django's JWT (JSON Web Token) Authentication. This ensures that users can securely log in and access the application with stateless, token-based authentication, enhancing security and scalability.
-- **User Registration and Login:** Supports user sign-up and login functionality with encrypted passwords, ensuring data privacy and security.
-- **Manage Budgets:** Allows users to input income, essential expenses, and set savings goals to manage their budget effectively.
-- **Real-time Updates:** Provides a dynamic dashboard where users can input non-essential expenses and see real-time updates on how those expenses impact their savings goals.
-- **Modern UI/UX:** Front-end features a clean and modern user interface that enhances usability, making navigation simple and intuitive.
-
+**Project Status:**  
+✅ **Backend is fully implemented and deployed on AWS EC2.**  
+🚧 **Frontend is still in development.**  
 
 ---
 
-## **Tech Stack**
+## **🚀 Features**
+
+- **Secure User Authentication** – Implements **JWT authentication** for stateless, token-based security.  
+- **User Registration & Login** – Encrypted password storage for data privacy.  
+- **Manage Budgets** – Users can input income, essential expenses, and set savings goals.  
+- **Real-Time Updates** – Dynamic calculations on how non-essential expenses affect savings goals.  
+- **Modern API-Driven Architecture** – Fully RESTful backend API.  
+
+---
+
+## **🛠 Tech Stack**
 
 ### **Backend (Django)**
 
 - **Django**: Python web framework to handle the backend logic and API requests
 - **Django Rest Framework (DRF)**: To create REST APIs for interacting with the frontend
-- **SQLite**: Default database for development (can be swapped for PostgreSQL or another DB in production)
+- **PostgreSQL**: Database for production
+- **JWT Authentication**: Secure user login
 
-### **Frontend (React)**
+### **Frontend (React) (In Progress)**
 
 - **React.js**: JavaScript library for building the user interface
 - **Axios** or **Fetch API**: For making HTTP requests to the Django API
 
 ---
 
-## **Installation**
+## **📥 Installation**
 
 ### **1. Clone the Repository**
 
@@ -167,10 +173,11 @@ Once both the frontend and backend are running, open your browser and navigate t
 ## **Project Structure**
 
 ```plaintext
-budgeting-app/
-├── backend/                     # Django Backend
-│   ├── budgeting/               # Project settings
-│   ├── api/                     # API logic (models, serializers, views)
+budgeting-proj/
+├── budgeting_backend/           # Django Backend
+│   ├── budget/                  # Core functionality app for managing income, expenses, and savings goals
+│   ├── budgeting_backend/       # Project settings and URL configurations
+│   ├── user_auth/               # Authentication app handling user registration, login, and logout
 │   └── manage.py                # Django project entry point
 ├── frontend/                    # React Frontend
 │   ├── src/                     # Frontend source files
@@ -183,7 +190,7 @@ budgeting-app/
 
 ---
 
-## **Contributing**
+## **🤝 Contributing**
 
 Contributions are welcome! To contribute:
 
@@ -195,18 +202,17 @@ Contributions are welcome! To contribute:
 
 ---
 
-## **License**
+## **📜 License**
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## **Authors**
+## **👥 Contact**
 
 For any questions or feedback, feel free to contact us at:
-- **Sayra Rodriguez** - *Front-end development* - [sayra6123@gmail.com](mailto:sayra6123@gmail.com)
-- **Socheata (Jasmine) Pok** - *Back-end development* - [socheatapok0801@gmail.com](mailto:socheatapok0801@gmail.com)
-
+- FrontEnd [sayra6123@gmail.com]
+- BackEnd [socheatapok0801@gmail.com]
 
 
 
