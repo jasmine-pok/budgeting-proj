@@ -59,7 +59,7 @@ The **Budgeting App** allows users to track their income, essential expenses, an
 ### **1. Clone the Repository**
 
 ```bash
-git clone https://github.com/yourusername/budgeting-app.git
+git clone https://github.com/jasmine-pok/budgeting-app.git
 cd budgeting-app
 ```
 ### **2. Backend Setup (Django)**
