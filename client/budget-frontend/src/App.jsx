@@ -1,37 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+//import { useState } from 'react'
 import './App.css'
+import {BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar/';
+import Home from './pages/Home';
+import Dashboard from './pages/Dashboard';
+import LoginRegister from './pages/LoginRegister';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-
-<div className="alert alert-warning" role="alert">
-  This is a Bootstrap alert!
-</div>
- <div className="App">
       <Navbar />
-      <h1>Budgeting 101</h1>
-      {/* Other components and content can go here */}
-    </div>
-    <h2>Budgeting 101</h2>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/login" element={<LoginRegister />} />
+      </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
