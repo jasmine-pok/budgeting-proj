@@ -31,7 +31,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = env.bool("DEBUG")
 
 # ALLOWED_HOSTS = env("ALLOWED_HOSTS").split(",")
 ALLOWED_HOSTS = ['*']
@@ -53,6 +53,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -60,13 +61,30 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+
 ]
 
 
-CORS_ALLOWED_ALL_ORIGINS = True
+# CORS_ALLOWED_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+ 	"http://localhost:5173"
+]
 
-CSRF_TRUSTED_ORIGINS = ['https://9570-98-34-148-45.ngrok-free.app']
+CORS_ALLOW_CREDENTIALS = True
+
+# Ensure cookies are sent securely
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+# CSRF_TRUSTED_ORIGINS = [
+#	"http://localhost:5173"
+#]
+
+# CSRF_TRUSTED_ORIGINS = ['https://9570-98-34-148-45.ngrok-free.app']
 
 ROOT_URLCONF = 'budgeting_backend.urls'
 

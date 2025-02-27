@@ -54,10 +54,10 @@ def register_user(request):
         # Set JWT tokens in cookies
         response = Response({'message': 'User registered successfully'}, status=status.HTTP_201_CREATED)
         response.set_cookie(
-            'access_token', value=access_token, httponly=True, secure=True, samesite='Strict'
+            key='access_token', value=str(access_token), httponly=True, secure=True, samesite='None', path='/'
         )
         response.set_cookie(
-            'refresh_token', value=str(refresh), httponly=True, secure=True, samesite='Strict'
+            key='refresh_token', value=str(refresh), httponly=True, secure=True, samesite='None', path='/'
         )
 
         return response
@@ -97,10 +97,10 @@ def user_login(request):
                                 status=status.HTTP_200_OK)
             
             response.set_cookie(
-                'access_token', value=access_token, httponly=True, secure=True, samesite='Strict'
+                key='access_token', value=str(access_token), httponly=True, secure=True, samesite='None', path='/'
             )
             response.set_cookie(
-                'refresh_token', value=str(refresh), httponly=True, secure=True, samesite='Strict'
+                key='refresh_token', value=str(refresh), httponly=True, secure=True, samesite='None', path='/'
             )
 
             return response
