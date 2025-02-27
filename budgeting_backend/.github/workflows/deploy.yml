@@ -26,6 +26,11 @@ jobs:
         run: |
           python manage.py test
 
+      - name: Database Migrations
+        run: |
+          python manage.py makemigrations
+          python manage.py migrate
+
       - name: SSH into EC2 & Deploy
         env:
           EC2_HOST: ${{ secrets.EC2_HOST }}
