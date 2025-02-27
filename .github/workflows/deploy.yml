@@ -9,7 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     env:
-        SECRET_KEY: ${{ secrets.DJANGO_SECRET_key }}
+        SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         DEBUG: ${{ secrets.DEBUG }}
         SIGNING_KEY: ${{ secrets.JWT_SIGNING_KEY }}
         DB_USER: ${{ secrets.DB_USER }}
