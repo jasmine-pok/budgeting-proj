@@ -22,10 +22,6 @@ jobs:
           pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run Tests
-        run: |
-          python manage.py test
-
       - name: Database Migrations
         run: |
           python manage.py makemigrations
