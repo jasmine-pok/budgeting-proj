@@ -14,6 +14,8 @@ from pathlib import Path
 from datetime import timedelta
 import environ
 import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -193,4 +195,12 @@ SIMPLE_JWT = {
 
 }
 
+"""
+sentry_sdk.init(
+    dsn=env('dsn'),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,
+    send_default_pii=True,
+)
+"""
 
