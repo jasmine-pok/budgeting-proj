@@ -19,13 +19,13 @@ from django.urls import path, include
 from django.http import HttpResponse
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-"""
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('user_auth.urls')),
     path('budget/', include('budget.urls'))
 ]
-"""
+
 # debug views
 @csrf_exempt  # Only for debugging - remove after troubleshooting
 def debug_settings(request):
