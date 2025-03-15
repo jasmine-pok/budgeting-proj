@@ -1,0 +1,34 @@
+.dashboard-container {
+    margin: 20px;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    /* Ensure top section takes up a 2x2 grid */
+  }
+  
+  .flex-item {
+    flex: 1 1 calc(50% - 40px); /* Takes 50% width minus margin for 2x2 */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  .full-width {
+    flex: 1 1 100%; /* Takes full width for the bottom 1x1 section */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+  }
+  
+  h3, h4 {
+    color: #333;
+  }
+  
