@@ -10,90 +10,158 @@ const Dashboard = () => {
       nonEssentialExpenses,
       savingsGoal,
     } = useContext(AppContext);
-
+  
+ // Editing state
+  const [editingEssentialIndex, setEditingEssentialIndex] = useState(null);
+  const [editingNonEssentialIndex, setEditingNonEssentialIndex] = useState(null);
+ 
+  // Editable copies (UI state)
+  const [editedEssentialExpenses, setEditedEssentialExpenses] = useState([]);
+  const [editedNonEssentialExpenses, setEditedNonEssentialExpenses] = useState([]);
+ 
+  // Calculated values
   const [totalEssentialExpenses, setTotalEssentialExpenses] = useState(0);
   const [totalNonEssentialExpenses, setTotalNonEssentialExpenses] = useState(0);
   const [timeToSavingsGoal, setTimeToSavingsGoal] = useState('');
 
+  // =====================================
+  // Initialize editable state from context
+  // =====================================
   useEffect(() => {
-    const fetchDashboardData = async () => {
-      const backendUrl = 'https://5f18979a-8527-486e-b5f3-f3f6f3d7c611.mock.pstmn.io';
-      try {
-        fetch(`${backendUrl}/essential-expenses-total`, {
-          headers: {
-            "Accept": "application/json", // Ensure we expect JSON
-          },
-        })
-      .then(res => res.text()) // Log as raw text before parsing
-      .then(text => {
-        console.log("Raw Response Text:", text);
-        try {
-          const jsonData = JSON.parse(text);
-          console.log("Parsed JSON:", jsonData);
-          if (jsonData && typeof jsonData === "object" && jsonData.total !== undefined) {
-            console.log("Extracted Total:", jsonData.total);
-          } else {
-            console.error("JSON does not contain 'total':", jsonData);
-          }
-          
-        } catch (error) {
-          console.error("JSON Parsing Error:", error);
-        }
-      })
-      .catch(err => console.error("Fetch Error:", err));
-          
-        // Essential Expenses
-        // Essential Expenses
-const essentialResponse = await fetch(`${backendUrl}/essential-expenses-total`);
-console.log("Full Essential Response:", essentialResponse); // Logs the full response
+     setEditedEssentialExpenses(
+      essentialExpenses.map(e => ({
+        ...e,
+        amount: Number(e.amount) || 0,
+      }))
+    );
 
-if (essentialResponse.ok) {
-  try {
-    // Ensure we correctly read the response as JSON
-    const essentialData = await essentialResponse.json();
-    console.log("Parsed Essential Data:", essentialData);
+    setEditedNonEssentialExpenses(
+      nonEssentialExpenses.map(e => ({
+        ...e,
+        amount: Number(e.amount) || 0,
+      }))
+    );
+  }, [essentialExpenses, nonEssentialExpenses]);
 
-    // Ensure that we correctly extract the 'total' field
-    if (essentialData && typeof essentialData.total === "number") {
-      setTotalEssentialExpenses(essentialData.total); // Correctly set the value
+// =====================================
+  // Recalculate totals + time to goal
+  // =====================================
+  useEffect(() => {
+    const essentialTotal = editedEssentialExpenses.reduce(
+      (sum, e) => sum + e.amount,
+      0
+    );
+
+    const nonEssentialTotal = editedNonEssentialExpenses.reduce(
+      (sum, e) => sum + e.amount,
+      0
+    );
+
+    setTotalEssentialExpenses(essentialTotal);
+    setTotalNonEssentialExpenses(nonEssentialTotal);
+
+    const monthlySavings =
+      monthlyEarnings - essentialTotal - nonEssentialTotal;
+
+    if (monthlySavings <= 0) {
+      setTimeToSavingsGoal('Not achievable with current expenses');
     } else {
-      console.error("Parsed essential data does not contain a valid 'total' field:", essentialData);
+      const months = Math.ceil(savingsGoal / monthlySavings);
+      setTimeToSavingsGoal(`${months} month${months > 1 ? 's' : ''}`);
     }
-  } catch (error) {
-    console.error("Failed to parse essential expenses response as JSON:", error);
-  }
-} else {
-  console.error(`Failed to fetch essential expenses: ${essentialResponse.status}`);
-}
+  }, [
+    editedEssentialExpenses,
+    editedNonEssentialExpenses,
+    monthlyEarnings,
+    savingsGoal,
+  ]);
 
-        // Non-Essential Expenses
-        const nonEssentialResponse = await fetch(`${backendUrl}/non-essential-expenses-total`);
-        const nonEssentialText = await nonEssentialResponse.text();
-        console.log('Non-Essential Response Raw:', nonEssentialText);
-        const nonEssentialData = JSON.parse(nonEssentialText);
-        setTotalNonEssentialExpenses(nonEssentialData.total);
-    
-        // Time to Savings Goal
-        const savingsResponse = await fetch(`${backendUrl}/time-to-savings-goal`);
+  // =====================================
+  // Handlers
+  // =====================================
+  const handleEssentialExpenseChange = (index, newAmount) => {
+    setEditedEssentialExpenses(prev =>
+      prev.map((expense, i) =>
+        i === index
+          ? { ...expense, amount: Number(newAmount) || 0 }
+          : expense
+      )
+    );
+  };
+
+  const handleNonEssentialExpenseChange = (index, newAmount) => {
+    setEditedNonEssentialExpenses(prev =>
+      prev.map((expense, i) =>
+        i === index
+          ? { ...expense, amount: Number(newAmount) || 0 }
+          : expense
+      )
+    );
+  };
+  /*
+// ===============================
+// BACKEND INTEGRATION (WIP)
+// Intended behavior:
+// - Fetch calculated totals from Django backend
+// - Receive time-to-savings-goal estimate
+// API integration was not finalized, so frontend
+// calculations are used for demo purposes.
+// ===============================
+
+useEffect(() => {
+    const fetchDashboardData = async () => {
+      const backendUrl = '';
+     
+      try {
+        // Fetch total essential expenses
+        const essentialResponse = await apiRequest(`${backendUrl}/essential-expenses-total`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (essentialResponse?.total !== undefined) {
+          setTotalEssentialExpenses(essentialResponse.total);
+          setEditedEssentialExpenses([...essentialExpenses]); // Initialize editable list
+        } else {
+          console.error("Error: Essential expenses data is invalid:", essentialResponse);
+        }
+
+        // Fetch total non-essential expenses
+        const nonEssentialResponse = await apiRequest(`${backendUrl}/non-essential-expenses-total`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+
+        if (nonEssentialResponse?.total !== undefined) {
+          setTotalNonEssentialExpenses(nonEssentialResponse.total);
+          setEditedNonEssentialExpenses([...nonEssentialExpenses]); // Initialize editable list
+        } else {
+          console.error("Error: Non-essential expenses data is invalid:", nonEssentialResponse);
+        }
+
+        // Fetch time to reach savings goal
+        const savingsResponse = await apiRequest(`${backendUrl}/budget/time-to-reach-goal/`, {
+          method: 'GET',
+          credentials: 'include',
+        });
+        console.log('Savings Response Raw:', savingsResponse);
         const savingsText = await savingsResponse.text();
-        console.log('Savings Response Raw:', savingsText);
-        setTimeToSavingsGoal(savingsText); // Directly set plain text response
+        console.log('Savings Response Text:', savingsText);
+
+        if (savingsResponse?.time !== undefined) {
+          setTimeToSavingsGoal(savingsResponse.time);
+        } else {
+          console.error("Error: Time-to-savings-goal data is invalid:", savingsResponse);
+        }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
       }
-    };  
-    const isValidJSON = (text) => {
-      try {
-        JSON.parse(text);
-        return true;
-      } catch (e) {
-        return false;
-      }
     };
+
     fetchDashboardData();
   }, []);
-  
-  
+
+*/
     return (
       <div className="dashboard-container">
         <h2>Welcome to the Dashboard</h2>
@@ -115,11 +183,25 @@ if (essentialResponse.ok) {
         <div className="flex-item">
         <h4>Essential Expenses:</h4>
         <ul>
-          {essentialExpenses.map((expense, index) => (
-            <li key={index}>
-              {expense.name}: ${expense.amount}
+        {(editedEssentialExpenses).map((expense, index) => (
+            <li key={index} className="expense-item">
+                {editingEssentialIndex === index ? (
+                    <>
+                        <input
+                            type="number"
+                            value={expense.amount}
+                            onChange={(e) => handleEssentialExpenseChange(index, e.target.value)}
+                        />
+                        <button onClick={() => setEditingEssentialIndex(null)}>Save</button>
+                    </>
+                ) : (
+                    <>
+                        <span>{expense.name}: ${expense.amount}</span>
+                        <button onClick={() => setEditingEssentialIndex(index)}>Edit</button>
+                    </>
+                )}
             </li>
-          ))}
+        ))}
         </ul>
         </div>
   
@@ -127,28 +209,44 @@ if (essentialResponse.ok) {
         <div className="flex-item">
         <h4>Non-Essential Expenses:</h4>
         <ul>
-          {nonEssentialExpenses.map((expense, index) => (
-            <li key={index}>
-              {expense.name}: ${expense.amount}
+        {(editedNonEssentialExpenses).map((expense, index) => (
+            <li key={index} className="expense-item">
+                {editingNonEssentialIndex === index ? (
+                    <>
+                        <input
+                            type="number"
+                            value={expense.amount}
+                            onChange={(e) => handleNonEssentialExpenseChange(index, e.target.value)}
+                        />
+                        <button onClick={() => setEditingNonEssentialIndex(null)}>Save</button>
+                    </>
+                ) : (
+                    <>
+                        <span>{expense.name}: ${expense.amount}</span>
+                        <button onClick={() => setEditingNonEssentialIndex(index)}>Edit</button>
+                    </>
+                )}
             </li>
-          ))}
+        ))}
             </ul>
         </div>
-         {/* Quadrant 5:  Time to reach goal*/}
-         <div className="flex-item full-width">
-          <h4>Time to reach Savings Goal:</h4>
-          <p>{timeToSavingsGoal}</p>
-        </div>
-        {/* Quadrant 6: Display Total Essential Expenses */}
-        <div className="flex-item full-width">
+
+        {/* Quadrant 5: Display Total Essential Expenses */}
+        <div className="flex-item">
           <h4>Total Essential Expenses:</h4>
           <p>${totalEssentialExpenses}</p>
         </div>
 
-        {/* Quadrant 7: Display Total Non-Essential Expenses */}
-        <div className="flex-item full-width">
+        {/* Quadrant 6: Display Total Non-Essential Expenses */}
+        <div className="flex-item">
           <h4>Total Non-Essential Expenses:</h4>
           <p>${totalNonEssentialExpenses}</p>
+        </div>
+
+        {/* Quadrant 7:  Time to reach goal*/}
+        <div className="flex-item full-width">
+          <h4>Time to reach Savings Goal:</h4>
+          <p>{timeToSavingsGoal}</p>
         </div>
 
       </div>
