@@ -1,51 +1,56 @@
-function getTokenFromCookies() {
-  console.log(document.cookie);
-  const match = document.cookie.match(/(^| )access_token=([^;]+)/);
-  return match ? match[2] : null;
-  
+// utils/apiRequest.js
+
+function getCookie(name) {
+  const cookieString = document.cookie;
+  const cookies = cookieString.split('; ');
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split('=');
+    if (key === name) return value;
+  }
+  return null;
 }
 
-// utils/apiRequest.js
 export const apiRequest = async (url, options = {}) => {
-  const accessToken = getTokenFromCookies();  // Get token from cookies
-  console.log(accessToken);
-  if (!accessToken) {
-    console.warn("No access token available. Authentication required.");
-    return null;  // Prevent unauthorized requests
-  }
+  const accessToken = getCookie("access_token"); // ← Get token from cookie
+  console.log("Cookies:", document.cookie);
+  console.log("Access token from cookie:", accessToken);
 
-   // Include the Authorization header
-   options.headers = {
-    ...options.headers,
-    Authorization: `Bearer ${accessToken}`,  // Add token to Authorization header
-  };
+// Ensure headers object exists
+options.headers = {
+  ...(options.headers || {}),
+  "Content-Type": "application/json",
+};
 
-  // Ensure options has correct settings
-  options.credentials = "include"; // Automatically include cookies
-
+// Only add Authorization header if accessToken exists
+if (accessToken) {
+  options.headers.Authorization = `Bearer ${accessToken}`;
+}
+ 
 try {
-  const response = await fetch(url, options);
+  let response = await fetch(url, options);
 
   if (response.status === 401) {
+    console.warn("Access token expired. Attempting refresh...");
+      
       // Token expired, attempt to refresh
-      const refreshResponse = await fetch("http://3.144.107.209/api/token/refresh", {
+      const refreshResponse = await fetch("/auth/api/token/refresh/", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        //headers: { "Content-Type": "application/json" },
         credentials: "include",  // Include cookies for refresh
   });
 
 
   if (refreshResponse.ok) {
-    const data = await refreshResponse.json();
-    // Assuming the refresh returns the new access token, set it in the cookies
-    document.cookie = `access_token=${data.access}; path=/`; // Set new access token in cookies
-
-    // Retry the original request with the new token
-    options.headers.Authorization = `Bearer ${data.access}`;
-    return await fetch(url, options).then(res => res.json());
+    console.log("Token refreshed. Retrying original request...");
+    // Try original request again
+    const newAccessToken = getCookie("access_token"); // Refresh likely updated it
+    options.headers.Authorization = `Bearer ${newAccessToken}`;
+    const retryResponse = await fetch(url, options);
+    return retryResponse.ok ? await retryResponse.json() : null;
   } else {
-    alert("Session expired. Please log in again.");
-    window.location.href = "/login"; // Redirect to login if refresh fails
+    //commented out for demo
+    //alert("Session expired. Please log in again.");
+    // window.location.href = "/login"; // Redirect to login if refresh fails
     return null;
   }
 }

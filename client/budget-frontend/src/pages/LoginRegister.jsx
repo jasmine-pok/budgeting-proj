@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../assets/styles/loginregisters.css"; // Add styling here
 import { apiRequest} from "../utils/apiRequest";
 
+
 const LoginRegister = () => {
   const [isLogin, setIsLogin] = useState(true); // Toggle between login and register
   const [username, setUsername] = useState("");
@@ -10,7 +11,7 @@ const LoginRegister = () => {
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
-    const backendUrl = 'http://3.144.107.209';
+    const backendUrl = '';
     e.preventDefault();
 
     const endpoint = isLogin ? `${backendUrl}/auth/login/` : `${backendUrl}/auth/register/`; // Backend endpoints
@@ -19,29 +20,28 @@ const LoginRegister = () => {
     try {
        const response = await fetch(endpoint, {
         method: "POST",
+        credentials: "include",  // This allows cookies to be stored
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(userData),
-        credentials: "include",  // This allows cookies to be stored
+        
       });
-
-    console.log("Full Response:", response);
-    console.log("Full Response:", response.ok);
+   const result = await response.json(); // ✅ Read response JSON only once
+    console.log("Login API Response:", result);
     
         if (response.ok)  {
-        const result = await response.json();
-        console.log("Login Response Data:", result);
         // Handle login response (store tokens)
-        if (isLogin) {
+        
           alert("Login successful!");
-        } else {
-          alert("Registration successful! You can now log in.");
-          setIsLogin(true);
+            // Redirect to the home page if login is successful
+              /*setTimeout(() => {
+                window.location.href = "/";
+              }, 2000);*/
+        }else {
+         //commented out for demo
+          // alert("Error: " + (result.detail || "Unable to process request"));
         }
-      } else {
-        alert("Error: Unable to process request");
-      }
     } catch (error) {
       console.error("Error:", error);
     }

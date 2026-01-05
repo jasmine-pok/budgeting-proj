@@ -34,7 +34,7 @@ function Home() {
   const submitForm = async (e) => {
     e.preventDefault();  // Prevent the default form submission behavior
 
-    const backendUrl = 'http://3.144.107.209';
+    const backendUrl = '';
 
    // const accessToken = localStorage.getItem("access_token");
     // Prepare data to send to the backend
@@ -54,6 +54,7 @@ function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ monthlyEarnings }),
+          credentials: "include", // Make sure this is included so cookies are sent along
         });
     
         await apiRequest(`${backendUrl}/budget/essential-expenses/`, {
@@ -62,6 +63,7 @@ function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ essentialExpenses }),
+          credentials: "include", // Make sure this is included so cookies are sent along
         });
     
         await apiRequest(`${backendUrl}/budget/non-essential-expense/`, {
@@ -70,6 +72,7 @@ function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ nonEssentialExpenses }),
+          credentials: "include", // Make sure this is included so cookies are sent along
         });
     
         await apiRequest(`${backendUrl}/budget/savings-goal/`, {
@@ -78,6 +81,7 @@ function Home() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({ savingsGoal }),
+          credentials: "include", // Make sure this is included so cookies are sent along
         });
     
         // Redirect to the dashboard if all submissions succeed
